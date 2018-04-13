@@ -30,10 +30,10 @@ EmbellecedorDeProgramas::~EmbellecedorDeProgramas(){
 char** EmbellecedorDeProgramas::embellecerPrograma(char** datos){
     for(int i = 0; datos[i] != 0; ++i){
         embellecerLinea(datos[i]);
+        
     }
 
     datosAcomodados[filaActual] = 0;
-
     return datosAcomodados;
 }
 

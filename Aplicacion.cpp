@@ -33,9 +33,9 @@ void Aplicacion::ejecutar(int nArg, char** vArg){
     separadorDeComandos(nArg,vArg);
     datosOriginales = procesadorDeArchivos->leerArchivo(nomArchivoOriginal);
     datosAcomodados = embellecedorDeProgramas->embellecerPrograma(datosOriginales);
-    cantidadPalabrasReservadas = analizadorDeProgramas->analizarPrograma(datosAcomodados);
     procesadorDeArchivos->escribirArchivo(nomArchivoFinal,datosAcomodados);
-    //Termina
+    cantidadPalabrasReservadas = analizadorDeProgramas->analizarPrograma(datosAcomodados);
+    procesadorDeArchivos->escribirArchivo("Contador.txt",cantidadPalabrasReservadas);
 }
 
 /*
