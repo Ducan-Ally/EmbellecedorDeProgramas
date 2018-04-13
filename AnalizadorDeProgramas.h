@@ -23,6 +23,7 @@ class AnalizadorDeProgramas{
         void analizarLinea(char*);
         void analizarPalabra(char*);
         void crearPalabrasReservadas();
+	void agregarContador();
 };
 
 #endif //EMBELLECEDORDEPROGRAMAS_ANALIZADORDEPROGRAMAS_H

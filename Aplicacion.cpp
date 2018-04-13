@@ -1,5 +1,5 @@
 //
-// Created by fakeb on 4/8/2018.
+// Created by Fabián Álvarez on 4/8/2018.
 //
 
 #include "Aplicacion.h"
@@ -33,9 +33,8 @@ void Aplicacion::ejecutar(int nArg, char** vArg){
     separadorDeComandos(nArg,vArg);
     datosOriginales = procesadorDeArchivos->leerArchivo(nomArchivoOriginal);
     datosAcomodados = embellecedorDeProgramas->embellecerPrograma(datosOriginales);
-    analizadorDeProgramas->analizarPrograma(datosAcomodados);
-    //Realiza el analisis
-    //Crea nuevos archivos
+    cantidadPalabrasReservadas = analizadorDeProgramas->analizarPrograma(datosAcomodados);
+    procesadorDeArchivos->escribirArchivo(nomArchivoFinal,datosAcomodados);
     //Termina
 }
 

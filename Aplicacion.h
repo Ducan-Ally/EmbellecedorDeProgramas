@@ -22,6 +22,7 @@ class Aplicacion{
         char* nomArchivoFinal;
         char** datosAcomodados;
         char** datosOriginales;
+	char** cantidadPalabrasReservadas;
 
         int originalFlag = 0; //Bandera que indica si en los parametros viene el nombre del archivo Original
         int finalFlag = 0; //Bandera que indica si en los parametros viene el nombre del archivo Final

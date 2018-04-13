@@ -28,11 +28,11 @@ EmbellecedorDeProgramas::~EmbellecedorDeProgramas(){
  * Ret: char** con la las líneas embellecidas
  */
 char** EmbellecedorDeProgramas::embellecerPrograma(char** datos){
-    for(int i = 0; datos[i] != '\0'; ++i){
+    for(int i = 0; datos[i] != 0; ++i){
         embellecerLinea(datos[i]);
     }
 
-    datosAcomodados[filaActual] = '\0';
+    datosAcomodados[filaActual] = 0;
 
     return datosAcomodados;
 }
@@ -104,6 +104,12 @@ void EmbellecedorDeProgramas::embellecerLinea(char* linea){
     cambioDeLineaFlag = 0;
 }
 
+/*
+ * param: char* con la palabra que se va a embellecer, se puede tomar por palabra un conjunto de caracteres
+ *
+ * Func: Analiza cada char de la palbra y activa o desactiva banderas dependiendo del char que encuentra.
+ * Finaliza copiando la palabra
+ */
 void EmbellecedorDeProgramas::embellecerPalabra(char* palabra){
     if(!strcmp(palabra,"#include") || !strcmp(palabra,"#define")){
         numeralFlag = 1;
