@@ -32,10 +32,22 @@ Aplicacion::~Aplicacion(){
 void Aplicacion::ejecutar(int nArg, char** vArg){
     separadorDeComandos(nArg,vArg);
     datosOriginales = procesadorDeArchivos->leerArchivo(nomArchivoOriginal);
-    datosAcomodados = embellecedorDeProgramas->embellecerPrograma(datosOriginales);
-    procesadorDeArchivos->escribirArchivo(nomArchivoFinal,datosAcomodados);
-    cantidadPalabrasReservadas = analizadorDeProgramas->analizarPrograma(datosAcomodados);
-    procesadorDeArchivos->escribirArchivo("Contador.txt",cantidadPalabrasReservadas);
+
+    if(datosOriginales){
+        datosAcomodados = embellecedorDeProgramas->embellecerPrograma(datosOriginales);
+
+        if(finalFlag){
+            procesadorDeArchivos->escribirArchivo(nomArchivoFinal,datosAcomodados);
+        }else{
+            for(int i = 0; datosAcomodados[i] != 0; ++i){
+                cout << datosAcomodados[i] << endl;
+            }
+        }
+
+        cantidadPalabrasReservadas = analizadorDeProgramas->analizarPrograma(datosAcomodados);
+        procesadorDeArchivos->escribirArchivo("Contador.txt",cantidadPalabrasReservadas);
+    }
+
 }
 
 /*
@@ -47,11 +59,13 @@ void Aplicacion::ejecutar(int nArg, char** vArg){
  */
 void Aplicacion::separadorDeComandos(int nArg, char** vArg){
     char* comando;
+    int strTam = 0;
 
     for(int i = 1; i < nArg; ++i){
-    //Este for es para revisar cada uno de los argumentos que vienen en el vector de
-    //argumentos "vArg"
+        //Este for es para revisar cada uno de los argumentos que vienen en el vector de
+        //argumentos "vArg"
         comando = strtok(vArg[i]," [],");
+        strTam = strlen(comando);
         if(0 == strcmp(comando,"-e")){
             ++i;
             comando = strtok (vArg[i], " [],");
@@ -61,11 +75,20 @@ void Aplicacion::separadorDeComandos(int nArg, char** vArg){
             if(0 == strcmp(comando,"-o")){
                 ++i;
                 comando = strtok (vArg[i], " [],");
-                strcpy(nomArchivoFinal,comando);
-
-                finalFlag = 1;
+                strTam = strlen(comando);
+                if(strTam > 4 && comando[strTam-1] == 'p' && comando[strTam-2] == 'p' && comando[strTam-3] == 'c' && comando[strTam-4] == '.'){
+                    strcpy(nomArchivoFinal,comando);
+                    finalFlag = 1;
+                }else{
+                    cout << "El tipo de archivo no es .cpp" << endl;
+                    finalFlag = 0;
+                }
             }else{
-                strcpy(nomArchivoOriginal,comando);
+                if(strTam > 4 && comando[strTam-1] == 'p' && comando[strTam-2] == 'p' && comando[strTam-3] == 'c' && comando[strTam-4] == '.'){
+                    strcpy(nomArchivoOriginal,comando);
+                }else{
+                    cout << "El tipo de archivo no es .cpp" << endl;
+                }
                 originalFlag = 1;
             }
         }
@@ -76,14 +99,11 @@ void Aplicacion::separadorDeComandos(int nArg, char** vArg){
         cin >> just;
     }
 
+    embellecedorDeProgramas->setJust(just);
+
     if(!originalFlag){
         cout << "Porfvor escriba el nombre del archivo a leer: ";
         cin >> nomArchivoOriginal;
-    }
-
-    if(!finalFlag){
-        cout << "Porfvor escriba el nombre del archivo en el que vamos a escribir: ";
-        cin >> nomArchivoFinal;
     }
 }
 

@@ -9,7 +9,6 @@
 using namespace std;
 
 EmbellecedorDeProgramas::EmbellecedorDeProgramas(){
-    cout << "Construyendo Analizador de Programas" << endl;
     datosAcomodados = new char* [MAX_FILAS];
     for(int i = 0; i < MAX_FILAS; ++i){
         datosAcomodados[i] = new char [MAX_COLUMNAS];
@@ -17,7 +16,6 @@ EmbellecedorDeProgramas::EmbellecedorDeProgramas(){
 }
 
 EmbellecedorDeProgramas::~EmbellecedorDeProgramas(){
-    cout << "Destruyendo Analizador de Programas" << endl;
 }
 
 /*
@@ -30,7 +28,7 @@ EmbellecedorDeProgramas::~EmbellecedorDeProgramas(){
 char** EmbellecedorDeProgramas::embellecerPrograma(char** datos){
     for(int i = 0; datos[i] != 0; ++i){
         embellecerLinea(datos[i]);
-        
+
     }
 
     datosAcomodados[filaActual] = 0;
@@ -52,11 +50,11 @@ void EmbellecedorDeProgramas::embellecerLinea(char* linea){
         token = strtok(NULL," \n\r");
 
         if(token != NULL){
-        //Quiere deci que aún hay tokens por leer en la línea
+            //Quiere deci que aún hay tokens por leer en la línea
             if(cambioDeLineaFlag){
                 if(token[0] != '/'){
-                //Se sabe que lo que sigue no es un comentario
-                //Por lo que se debe realizar el cambio de linea
+                    //Se sabe que lo que sigue no es un comentario
+                    //Por lo que se debe realizar el cambio de linea
                     ponerCaracter(char(13),datosAcomodados,filaActual,columnaActual);
                     ++columnaActual;
                     ponerCaracter('\0',datosAcomodados,filaActual,columnaActual);
@@ -64,22 +62,22 @@ void EmbellecedorDeProgramas::embellecerLinea(char* linea){
                     columnaActual = 0;
                     justificar(datosAcomodados[filaActual],columnaActual);
                 }else{
-                //Lo que sigue es un comentario, entonces no se hace cambio de línea
-                //si no que se hace hasta que el comentario termine
+                    //Lo que sigue es un comentario, entonces no se hace cambio de línea
+                    //si no que se hace hasta que el comentario termine
                     ponerCaracter(' ',datosAcomodados,filaActual,columnaActual);
                     ++columnaActual;
                 }
                 cambioDeLineaFlag = 0;
             }else{
-            //No hay cambio de línea por lo que simplemente debe separar la siguente palabra de la actual
+                //No hay cambio de línea por lo que simplemente debe separar la siguente palabra de la actual
                 ponerCaracter(' ',datosAcomodados,filaActual,columnaActual);
                 ++columnaActual;
             }
 
         }else{
-        //Se acabó la línea, entonces hay que ver sí se debe o no hacer un salto de línea
+            //Se acabó la línea, entonces hay que ver sí se debe o no hacer un salto de línea
             if(terminoComLineasFlag || cambioDeLineaFlag || comentariosFlag || comentarioLineasFlag || numeralFlag){
-            //Sí una de esas baneras está activada se debe realizar un cambio de línea
+                //Sí una de esas baneras está activada se debe realizar un cambio de línea
                 ponerCaracter(char(13),datosAcomodados,filaActual,columnaActual);
                 ++columnaActual;
                 ponerCaracter('\0',datosAcomodados,filaActual,columnaActual);
@@ -92,7 +90,7 @@ void EmbellecedorDeProgramas::embellecerLinea(char* linea){
                 cambioDeLineaFlag = 0;
                 numeralFlag = 0;
             }else{
-            //Ninguna bandera está activa, por lo que no hay que gacer ningún cambio de línea
+                //Ninguna bandera está activa, por lo que no hay que gacer ningún cambio de línea
                 ponerCaracter(' ',datosAcomodados,filaActual,columnaActual);
                 ++columnaActual;
             }
@@ -115,29 +113,33 @@ void EmbellecedorDeProgramas::embellecerPalabra(char* palabra){
         numeralFlag = 1;
     }
 
+    if(!strcmp(palabra,"public:") || !strcmp(palabra,"private:")){
+        cambioDeLineaFlag = 1;
+    }
+
     for(int i = 0; palabra[i] != '\0' && int(palabra[i]) != 13; ++i){
         if(palabra[i] == '/' && !comentarioLineasFlag && !comentariosFlag && !comillasFlag){
-        //Activacion de banderas para el caso de comentarios
+            //Activacion de banderas para el caso de comentarios
             if(palabra[i+1] == '/'){
-            //Caso para los comentarios de una linea
+                //Caso para los comentarios de una linea
                 comentariosFlag = 1;
             }else{
                 if(palabra[i+1] == '*'){
-                //Caso para los omentarios de varias lineas
+                    //Caso para los omentarios de varias lineas
                     comentarioLineasFlag = 1;
                 }
             }
         }
 
         if(palabra[i] == '"'){
-            if(i == 0 || palabra[i-1] != '\\'){
-            //Preguntamos sí es un posible indicador de string
+            if(i == 0 || (palabra[i-1] != '\\' && palabra[i-1] != '\'')){
+                //Preguntamos sí es un posible indicador de string
                 if(comillasFlag) {
-                //Desactivación de bandera string, pues aquí termina un string
+                    //Desactivación de bandera string, pues aquí termina un string
                     comillasFlag = 0;
                 }else{
                     if(!comentarioLineasFlag && !comentariosFlag && !numeralFlag){
-                    //Activación de bandera string, pues aquí comienza un string
+                        //Activación de bandera string, pues aquí comienza un string
                         comillasFlag = 1;
                     }
                 }
@@ -145,41 +147,41 @@ void EmbellecedorDeProgramas::embellecerPalabra(char* palabra){
         }
 
         if(comentarioLineasFlag && palabra[i] == '*') {
-        //Preguntamos sí este es un posible fin de comentario de varias líneas
+            //Preguntamos sí este es un posible fin de comentario de varias líneas
             if (palabra[i + 1] == '/') {
-            //Desactivar bandera de comentarios en varias lineas
+                //Desactivar bandera de comentarios en varias lineas
                 comentarioLineasFlag = 0;
                 terminoComLineasFlag = 1;
             }
         }
 
         if((palabra[i] == '(' || palabra[i] == '[') && !comentariosFlag && !comentarioLineasFlag && !comillasFlag){
-        //Activacion de la bandera para parentesis
+            //Activacion de la bandera para parentesis
             ++parentesisFlag;
         }
 
         if((palabra[i] == ')' || palabra[i] == ']') && !comentariosFlag && !comentarioLineasFlag && !comillasFlag){
-        //Desactivacion de la bandera para parentesis
+            //Desactivacion de la bandera para parentesis
             --parentesisFlag;
         }
 
         if(palabra[i] == '{' && !comentariosFlag && !comentarioLineasFlag && !comillasFlag){
-        //Agregado de justificacion
-        //Activación del cambio de línea
+            //Agregado de justificacion
+            //Activación del cambio de línea
             ++nivelDeJust;
             cambioDeLineaFlag = 1;
         }
 
         if(palabra[i] == '}' && !comentariosFlag && !comentarioLineasFlag && !comillasFlag){
-        //Desagregado de justificacion
-        //Activación del cambio de línea
+            //Desagregado de justificacion
+            //Activación del cambio de línea
             --nivelDeJust;
             columnaActual -= just;
             cambioDeLineaFlag = 1;
         }
 
         if(palabra[i] == ';' && !parentesisFlag && !comentariosFlag && !comentarioLineasFlag && !comillasFlag){
-        //Activación del cambio de línea
+            //Activación del cambio de línea
             cambioDeLineaFlag = 1;
         }
 
@@ -213,4 +215,10 @@ void EmbellecedorDeProgramas::justificar(char* linea, int& pos){
         linea[pos+i] = ' ';
     }
     pos += nivelDeJust*just;
+}
+
+void EmbellecedorDeProgramas::setJust(int j){
+    if(j > 0){
+        just = j;
+    }
 }

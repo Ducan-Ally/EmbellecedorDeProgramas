@@ -12,11 +12,9 @@
 using namespace std;
 
 ProcesadorDeArchivos::ProcesadorDeArchivos(){
-    cout << "Construyendo Procesador de Archivos" << endl;
 }
 
 ProcesadorDeArchivos::~ProcesadorDeArchivos(){
-    cout << "Destruyendo Procesador de Archivos" << endl;
 }
 
 /*
@@ -40,7 +38,6 @@ char** ProcesadorDeArchivos::leerArchivo(const char* nomArchivo){
             getline(archivo,linea);
             nLineas++;
         }
-        cout << "Numero de Lineas en Arhivo: " << nLineas << endl;
         archivo.clear();
         archivo.seekg(0); //Regresamos a la primera línea del achivo
 

@@ -27,8 +27,8 @@ char** AnalizadorDeProgramas::analizarPrograma(char** datos){
     for(int i = 0; datos[i] != 0; ++i){
         analizarLinea(datos[i]);
     }
-	
-	agregarContador();
+
+    agregarContador();
     return datosAnalizados;
 }
 
@@ -61,29 +61,29 @@ void AnalizadorDeProgramas::analizarPalabra(char* palabra){
     int strTam = strlen(palabra);
     int banderaPalabraRes = 1;
     if(strTam > 1 && !comillasFlag && !comentariosDeLineasFag && !comentariosFlag){
-	//La palabra se puede analizar sí no tiene ninguna bandera activa, pues las banderas indican 
-	//sí hay o no que ignorar la palabra
-	//También debe ser mayor a uno, pues la palabra reservada más pequeña es de tamaño dos
+        //La palabra se puede analizar sí no tiene ninguna bandera activa, pues las banderas indican
+        //sí hay o no que ignorar la palabra
+        //También debe ser mayor a uno, pues la palabra reservada más pequeña es de tamaño dos
         if(palabra[0] == '/'){
             if(palabra[1] == '/'){
-			//Quiere decir que es un comentario de una línea
+                //Quiere decir que es un comentario de una línea
                 comentariosFlag = 1;
             }else{
                 if(palabra[1] == '*'){
-				//Quiere decir que es un comentario de varias líneas
+                    //Quiere decir que es un comentario de varias líneas
                     comentariosDeLineasFag = 1;
                 }
             }
         }else{
             if(palabra[0] == '"'){
-			//Quiere decir que es el comienzo de un string
+                //Quiere decir que es el comienzo de un string
                 comillasFlag = 1;
             }else{
                 for(int i = 0; datosAnalizados[i] != 0; ++i){
-				//Recorremos el vector de palabras reservadas
+                    //Recorremos el vector de palabras reservadas
                     if(strstr (palabra,datosAnalizados[i]) && strTam <= strlen(datosAnalizados[i])+2){
-					//Si encuentra la palabra reservada en la palabra que recibe como parámetro se cuenta
-					//El más dos es para considerar sí el caraacter especial es un puntero "char**" o ese tipo de casos
+                        //Si encuentra la palabra reservada en la palabra que recibe como parámetro se cuenta
+                        //El más dos es para considerar sí el caraacter especial es un puntero "char**" o ese tipo de casos
                         ++contadorDeKeyWords[i];
                     }
                 }
@@ -92,11 +92,11 @@ void AnalizadorDeProgramas::analizarPalabra(char* palabra){
     }
 
     if(comillasFlag && palabra[strTam-1] == '"'){
-	//Implica que encontró una comilla, que es candidata a ser el fin de un string
+        //Implica que encontró una comilla, que es candidata a ser el fin de un string
         if(strTam > 1){
-		//Verifica que sí es solo el " es final de string, sí no debe considerar lo que viene antes
+            //Verifica que sí es solo el " es final de string, sí no debe considerar lo que viene antes
             if(palabra[strTam-2] != '\\'){
-			//Sí el caracter anterior al " no es un \ quiere decir que es el final del string
+                //Sí el caracter anterior al " no es un \ quiere decir que es el final del string
                 comillasFlag = 0;
             }
         }else{
@@ -105,10 +105,10 @@ void AnalizadorDeProgramas::analizarPalabra(char* palabra){
     }
 
     if(comentariosDeLineasFag && strTam > 1){
-	//Pregunta sí la palabra tiene un tamaño mayor a un pues el indicador de final
-	//de comentario de líneas es */
+        //Pregunta sí la palabra tiene un tamaño mayor a un pues el indicador de final
+        //de comentario de líneas es */
         if(palabra[strTam-1] == '/' && palabra[strTam-2] == '*'){
-		//Implica que lo que encontró sí es el final de un comentario de líneas
+            //Implica que lo que encontró sí es el final de un comentario de líneas
             comentariosDeLineasFag = 0;
         }
     }
@@ -195,8 +195,8 @@ void AnalizadorDeProgramas::crearPalabrasReservadas(){
  * Func: Concatena cada palabra reservada con su contador
  */
 void AnalizadorDeProgramas::agregarContador(){
-	for(int i = 0; datosAnalizados[i] != 0; ++i){
-		strcat(datosAnalizados[i],": ");
-		strcat(datosAnalizados[i],std::to_string(contadorDeKeyWords[i]).c_str());
-	}
+    for(int i = 0; datosAnalizados[i] != 0; ++i){
+        strcat(datosAnalizados[i],": ");
+        strcat(datosAnalizados[i],std::to_string(contadorDeKeyWords[i]).c_str());
+    }
 }
